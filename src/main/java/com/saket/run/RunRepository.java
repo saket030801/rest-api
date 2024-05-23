@@ -21,10 +21,9 @@ public class RunRepository {
     }
 
     Optional<Run> findById(Integer id){
-        return Optional.of(runs.stream()
+        return runs.stream()
                 .filter(run -> run.id() == id)
-                .findFirst()
-                .get());
+                .findFirst();
     }
 
     void create(Run run){
@@ -33,15 +32,13 @@ public class RunRepository {
 
     void update(Run run, Integer id){
         Optional<Run> existingRun = findById(id);
-        if(existingRun.isPresent()){
-            runs.set(runs.indexOf(existingRun.get()), run);
-        }
+        existingRun.ifPresent(value -> runs.set(runs.indexOf(value), run));
     }
 
     public void delete(Integer id) {
         Optional<Run> existingRun = findById(id);
         if(existingRun.isPresent()){
-            runs.remove(existingRun);
+            runs.removeIf(run -> run.id().equals(id));
         }
     }
 
@@ -50,7 +47,7 @@ public class RunRepository {
         runs.add(new Run(1,
                 "Monday morning run",
                 LocalDateTime.now(),
-                LocalDateTime.now().plusMinutes(30),
+                LocalDateTime.now().plusHours(2),
                 3,
                 Location.INDOOR));
 
@@ -58,7 +55,7 @@ public class RunRepository {
         runs.add(new Run(2,
                 "Tuesday morning run",
                 LocalDateTime.now(),
-                LocalDateTime.now().plusMinutes(30),
+                LocalDateTime.now().plusHours(2),
                 3,
                 Location.OUTDOOR));
     }

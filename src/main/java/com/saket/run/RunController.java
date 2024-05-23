@@ -1,5 +1,6 @@
 package com.saket.run;
 
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,17 +24,27 @@ public class RunController {
 
 
     @GetMapping("/{id}")
-    Optional<Run> findById(@PathVariable Integer id){
-        return runRepository.findById(id);
+    Run findById(@PathVariable Integer id){
+        Optional<Run> run = runRepository.findById(id);
+//        if(run.isEmpty()){
+//            throw new RunNotFoundException();
+//        }
+
+        if (run.isPresent()) {
+            return run.get();
+        } else {
+            throw new RunNotFoundException(); // Pass the ID to the exception
+        }
+//        return run.get();
     }
 
     @PostMapping("")
-    void create(@RequestBody Run run){
+    void create(@Valid @RequestBody Run run){
         runRepository.create(run);
     }
 
     @PutMapping("/{id}")
-    void update (@RequestBody Run run, @PathVariable Integer id){
+    void update (@Valid @RequestBody Run run, @PathVariable Integer id){
         runRepository.update(run, id);
     }
 
